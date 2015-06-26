@@ -32,14 +32,19 @@ $("#refresh").click(function()
         for(var i = 0; i < data.result.servers.length; i++)
         {
             var serverIP = data.result.servers[i];
-            console.log(serverIP);
-            $.getJSON("http://" + serverIP, function(serverInfo) {
-                addServer(serverIP, serverInfo.name, serverInfo.hostPlayer, serverInfo.map, serverInfo.mapFile, serverInfo.variant, serverInfo.numPlayers, serverInfo.maxPlayers);
-                console.log(serverInfo);
-            });
+            queryServer(serverIP);
         }
     });
 });
+    
+function queryServer(serverIP)
+{
+    console.log(serverIP);
+    $.getJSON("http://" + serverIP, function(serverInfo) {
+        addServer(serverIP, serverInfo.name, serverInfo.hostPlayer, serverInfo.map, serverInfo.mapFile, serverInfo.variant, serverInfo.numPlayers, serverInfo.maxPlayers);
+        console.log(serverInfo);
+    });
+}
 
 function addServer(ip, name, host, map, mapfile, gamemode, numplayers, maxplayers)
 {
