@@ -8,6 +8,7 @@
     <td>Server Name (host player)</td>
     <td>Map</td> 
     <td>Game Type</td>
+    <td>Status</td>
     <td>Players</td>
   </tr>
 </table><br>
@@ -41,19 +42,33 @@ function queryServer(serverIP)
 {
     console.log(serverIP);
     $.getJSON("http://" + serverIP, function(serverInfo) {
-        addServer(serverIP, serverInfo.name, serverInfo.hostPlayer, serverInfo.map, serverInfo.mapFile, serverInfo.variant, serverInfo.numPlayers, serverInfo.maxPlayers);
+        var isPassworded = serverInfo.passworded !== undefined;
+        addServer(serverIP, isPassworded, serverInfo.name, serverInfo.hostPlayer, serverInfo.map, serverInfo.mapFile, serverInfo.variant, serverInfo.status, serverInfo.numPlayers, serverInfo.maxPlayers);
         console.log(serverInfo);
     });
 }
 
-function addServer(ip, name, host, map, mapfile, gamemode, numplayers, maxplayers)
+function promptPassword(serverIP)
+{
+    var password = prompt("The server at " + serverIP + " is passworded, enter the password to join", "");
+    if(password != null)
+    {
+        window.open("dorito:" + serverIP + "/" + password);
+    }
+}
+
+function addServer(ip, isPassworded, name, host, map, mapfile, gamemode, status, numplayers, maxplayers)
 {
     var servName = "<td><a href=\"dorito:" + ip + "\">" + name + " (" + host + ")</a></td>";
+    if(isPassworded)
+        servName = "<td><a href=\"#\" onclick=\"promptPassword('" + ip + "');\">[PASSWORDED] " + name + " (" + host + ")</a></td>";
+        
     var servMap = "<td>" + map + " (" + mapfile + ")</td>";
     var servType = "<td>" + gamemode + "</td>";
+    var servStatus = "<td>" + status + "</td>";
     var servPlayers = "<td>" + numplayers + "/" + maxplayers + "</td>";
 
-    $('#serverlist tr:last').after("<tr id=\"wew\">" + servName + servMap + servType + servPlayers + "</tr>");
+    $('#serverlist tr:last').after("<tr>" + servName + servMap + servType + servStatus + servPlayers + "</tr>");
 }
 </script>
 </body>
