@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>ElDewrito Server Browser 0.00000001 Pre-Release Alpha Special Collectors Edition</title>
+<title>ElDewrito Server Browser 0.00000002 Pre-Release Alpha Special Collectors Edition</title>
 </head>
 <body>
 <button id="refresh">Refresh</button>
@@ -23,7 +23,7 @@ $(document).ready(function()
 $("#refresh").click(function()
 {
     $("#serverlist").find("tr:gt(0)").remove();
-    $.getJSON( "http://eldewrito-masterserver-personality.c9.io/list", function( data ) {
+    $.getJSON( "http://eldewrito.red-m.net/list", function( data ) {
         if(data.result.code != 0)
         {
             alert("Error received from master: " + data.result.msg);
