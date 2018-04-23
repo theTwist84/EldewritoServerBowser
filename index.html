@@ -79,7 +79,7 @@
 			
 			function addServer(ip, isPassworded, name, host, map, mapfile, gamemode, status, numplayers, maxplayers) {
 				//let servName = "<td><a href=\"dorito:" + ip + "\">" + name + " (" + host + ")</a></td>";
-				let servName = "<td><a onclick=\"dew.command(" + ip + )\"">" + name + " (" + host + ")</a></td>";
+				let servName = "<td><a onclick=\"dew.command(" + ip + ")\">" + name + " (" + host + ")</a></td>";
 				if (isPassworded)
 					servName = "<td><a href=\"#\" onclick=\"promptPassword('" + ip + "');\">[PASSWORDED] " + name + " (" + host + ")</a></td>";
 				let servMap = "<td>" + map + " (" + mapfile + ")</td>";
