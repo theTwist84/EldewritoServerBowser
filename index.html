@@ -16,30 +16,50 @@
         </table><br>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/javascript">
+            let playerCount = 0;
+			let serverCount = 0;
+
             $(document).ready(function() {
                 // addServer("127.0.0.1:11775", "Test server", "emoose", "Guardian", "guardian", "Team Slayer", "1", "16");
             });
             $("#refresh").click(function() {
+              	playerCount = 0;
+              	serverCount = 0;
                 $("#serverlist").find("tr:gt(0)").remove();
                 $.getJSON("http://eldewrito.red-m.net/list", function(data) {
                     if (data.result.code != 0) {
                         alert("Error received from master: " + data.result.msg);
                         return;
                     }
-                    console.log(data);
-                    for (var i = 0; i < data.result.servers.length; i++) {
+                  	serverCount = data.result.servers.length;
+                    $('#serverCount')[0].innerHTML = serverCount;
+                    //console.log(data);
+                    for (var i = 0; i < serverCount; i++) {
                         var serverIP = data.result.servers[i];
                         queryServer(serverIP);
+                    	$('#playerCount')[0].innerHTML = playerCount;
                     }
                 });
             });
 
             function queryServer(serverIP) {
-                console.log(serverIP);
+                //console.log(serverIP);
                 $.getJSON("http://" + serverIP, function(serverInfo) {
                     var isPassworded = serverInfo.passworded !== undefined;
-                    addServer(serverIP, isPassworded, serverInfo.name, serverInfo.hostPlayer, serverInfo.map, serverInfo.mapFile, serverInfo.variant, serverInfo.status, serverInfo.numPlayers, serverInfo.maxPlayers);
-                    console.log(serverInfo);
+                  	playerCount = serverInfo.numPlayers;
+                    addServer(
+                      serverIP, 
+                      isPassworded, 
+                      serverInfo.name, 
+                      serverInfo.hostPlayer, 
+                      serverInfo.map, 
+                      serverInfo.mapFile, 
+                      serverInfo.variant, 
+                      serverInfo.status, 
+                      serverInfo.numPlayers, 
+                      serverInfo.maxPlayers
+                    );
+                    //console.log(serverInfo);
                 });
             }
 
@@ -60,7 +80,7 @@
                 var servStatus = "<td>" + status + "</td>";
                 var servPlayers = "<td>" + numplayers + "/" + maxplayers + "</td>";
                 $('#serverlist tr:last').after("<tr>" + servName + servMap + servType + servStatus + servPlayers + "</tr>");
-            }
+            }        
         </script>
     </body>
 </html>
