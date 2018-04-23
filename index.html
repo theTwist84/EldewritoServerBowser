@@ -1,73 +1,65 @@
 <html>
-<head>
-    <title>ElDewrito Server Browser 0.00000002 Pre-Release Alpha Special Collectors Edition</title>
-</head>
-<body>
-    <button id="refresh">Refresh</button>
-    <h4 id="serverStats"> 
-        <span id="serverCount">00 servers</span> / 
-        <span id="playerCount">00 players</span>
-    </h4>
-    <table id="serverlist" style="width:100%">
-        <tr>
-            <td>Server Name (host player)</td>
-            <td>Map</td> 
-            <td>Game Type</td>
-            <td>Status</td>
-            <td>Players</td>
-        </tr>
-    </table><br>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(onReady());
-        $("#refresh").click(onRefresh());
-
-        function onReady() {
-            // addServer("127.0.0.1:11775", "Test server", "emoose", "Guardian", "guardian", "Team Slayer", "1", "16");
-        });
-
-        function onRefresh() {
-            $("#serverlist").find("tr:gt(0)").remove();
-            $.getJSON("http://eldewrito.red-m.net/list", function(data) {
-                if (data.result.code != 0) {
-                    alert("Error received from master: " + data.result.msg);
-                    return;
-                }
-                console.log(data);
-                for (var i = 0; i < data.result.servers.length; i++) {
-                    var serverIP = data.result.servers[i];
-                    queryServer(serverIP);
-                }
+    <head>
+        <title>ElDewrito Server Browser 0.00000002 Pre-Release Alpha Special Collectors Edition</title>
+    </head>
+    <body>
+        <button id="refresh">Refresh</button>
+        <table id="serverlist" style="width:100%">
+            <tr>
+                <td>Server Name (host player)</td>
+                <td>Map</td>
+                <td>Game Type</td>
+                <td>Status</td>
+                <td>Players</td>
+            </tr>
+        </table><br>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // addServer("127.0.0.1:11775", "Test server", "emoose", "Guardian", "guardian", "Team Slayer", "1", "16");
             });
-        });
-
-        function queryServer(serverIP) {
-            console.log(serverIP);
-            $.getJSON("http://" + serverIP, function(serverInfo) {
-                var isPassworded = serverInfo.passworded !== undefined;
-                addServer(serverIP, isPassworded, serverInfo.name, serverInfo.hostPlayer, serverInfo.map, serverInfo.mapFile, serverInfo.variant, serverInfo.status, serverInfo.numPlayers, serverInfo.maxPlayers);
-                console.log(serverInfo);
+            $("#refresh").click(function() {
+                $("#serverlist").find("tr:gt(0)").remove();
+                $.getJSON("http://eldewrito.red-m.net/list", function(data) {
+                    if (data.result.code != 0) {
+                        alert("Error received from master: " + data.result.msg);
+                        return;
+                    }
+                    console.log(data);
+                    for (var i = 0; i < data.result.servers.length; i++) {
+                        var serverIP = data.result.servers[i];
+                        queryServer(serverIP);
+                    }
+                });
             });
-        }
 
-        function promptPassword(serverIP) {
-            var password = prompt("The server at " + serverIP + " is passworded, enter the password to join", "");
-            if (password != null) {
-                window.open("dorito:" + serverIP + "/" + password);
+            function queryServer(serverIP) {
+                console.log(serverIP);
+                $.getJSON("http://" + serverIP, function(serverInfo) {
+                    var isPassworded = serverInfo.passworded !== undefined;
+                    addServer(serverIP, isPassworded, serverInfo.name, serverInfo.hostPlayer, serverInfo.map, serverInfo.mapFile, serverInfo.variant, serverInfo.status, serverInfo.numPlayers, serverInfo.maxPlayers);
+                    console.log(serverInfo);
+                });
             }
-        }
 
-        function addServer(ip, isPassworded, name, host, map, mapfile, gamemode, status, numplayers, maxplayers) {
-            var servName = "<td><a href=\"dorito:" + ip + "\">" + name + " (" + host + ")</a></td>";
-            if (isPassworded)
-                servName = "<td><a href=\"#\" onclick=\"promptPassword('" + ip + "');\">[PASSWORDED] " + name + " (" + host + ")</a></td>";
+            function promptPassword(serverIP) {
+                var password = prompt("The server at " + serverIP + " is passworded, enter the password to join", "");
+                if (password != null) {
+                    window.open("dorito:" + serverIP + "/" + password);
+                }
+            }
 
-            var servMap = "<td>" + map + " (" + mapfile + ")</td>";
-            var servType = "<td>" + gamemode + "</td>";
-            var servStatus = "<td>" + status + "</td>";
-            var servPlayers = "<td>" + numplayers + "/" + maxplayers + "</td>";
-            $('#serverlist tr:last').after("<tr>" + servName + servMap + servType + servStatus + servPlayers + "</tr>");
-        }
-    </script>
-</body>
+            function addServer(ip, isPassworded, name, host, map, mapfile, gamemode, status, numplayers, maxplayers) {
+                var servName = "<td><a href=\"dorito:" + ip + "\">" + name + " (" + host + ")</a></td>";
+                if (isPassworded)
+                    servName = "<td><a href=\"#\" onclick=\"promptPassword('" + ip + "');\">[PASSWORDED] " + name + " (" + host + ")</a></td>";
+
+                var servMap = "<td>" + map + " (" + mapfile + ")</td>";
+                var servType = "<td>" + gamemode + "</td>";
+                var servStatus = "<td>" + status + "</td>";
+                var servPlayers = "<td>" + numplayers + "/" + maxplayers + "</td>";
+                $('#serverlist tr:last').after("<tr>" + servName + servMap + servType + servStatus + servPlayers + "</tr>");
+            }
+        </script>
+    </body>
 </html>
