@@ -36,7 +36,6 @@
 					for (var i = 0; i < serverCount; i++) {
 						let serverIP = data.result.servers[i];
 						queryServer(serverIP);
-						$('#playerCount')[0].innerHTML = playerCount;
 					}
 				});
 			});
@@ -58,7 +57,7 @@
 						serverInfo.numPlayers,
 						serverInfo.maxPlayers
 					);
-					console.log(playerCount);
+					$('#playerCount')[0].innerHTML = playerCount;
 					//console.log(serverInfo);
 				});
 			}
