@@ -19,56 +19,42 @@
     </table><br>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript">
-        let serverCount = 0;
-        let playerCount = 0;
-
         $(document).ready(onReady());
         $("#refresh").click(onRefresh());
 
         function onReady() {
             // addServer("127.0.0.1:11775", "Test server", "emoose", "Guardian", "guardian", "Team Slayer", "1", "16");
-            //$("#refresh").click();
-        }
+        });
 
         function onRefresh() {
-            serverCount = 0;
-            playerCount = 0;
             $("#serverlist").find("tr:gt(0)").remove();
             $.getJSON("http://eldewrito.red-m.net/list", function(data) {
                 if (data.result.code != 0) {
                     alert("Error received from master: " + data.result.msg);
                     return;
                 }
-                //console.log(data);
+                console.log(data);
                 for (var i = 0; i < data.result.servers.length; i++) {
                     var serverIP = data.result.servers[i];
                     queryServer(serverIP);
-
-                    $('#serverCount').after("<span id=\"serverCount\">" + serverCount + " server</span>");
-                    $('#playerCount').after("<span id=\"playerCount\">" + playerCount + " players</span>");
                 }
             });
-        }
+        });
 
         function queryServer(serverIP) {
-            serverCount += 1;
-            playerCount += serverInfo.numPlayers;
-            //console.log(serverIP);
+            console.log(serverIP);
             $.getJSON("http://" + serverIP, function(serverInfo) {
                 var isPassworded = serverInfo.passworded !== undefined;
-                addServer(
-                    serverIP, isPassworded, serverInfo.name, serverInfo.hostPlayer,
-                    serverInfo.map, serverInfo.mapFile, serverInfo.variant,
-                    serverInfo.status, serverInfo.numPlayers, serverInfo.maxPlayers
-                );
-                //console.log(serverInfo);
+                addServer(serverIP, isPassworded, serverInfo.name, serverInfo.hostPlayer, serverInfo.map, serverInfo.mapFile, serverInfo.variant, serverInfo.status, serverInfo.numPlayers, serverInfo.maxPlayers);
+                console.log(serverInfo);
             });
         }
 
         function promptPassword(serverIP) {
             var password = prompt("The server at " + serverIP + " is passworded, enter the password to join", "");
-            if (password != null)
+            if (password != null) {
                 window.open("dorito:" + serverIP + "/" + password);
+            }
         }
 
         function addServer(ip, isPassworded, name, host, map, mapfile, gamemode, status, numplayers, maxplayers) {
@@ -80,6 +66,7 @@
             var servType = "<td>" + gamemode + "</td>";
             var servStatus = "<td>" + status + "</td>";
             var servPlayers = "<td>" + numplayers + "/" + maxplayers + "</td>";
+            $('#serverlist tr:last').after("<tr>" + servName + servMap + servType + servStatus + servPlayers + "</tr>");
         }
     </script>
 </body>
