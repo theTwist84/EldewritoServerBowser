@@ -18,6 +18,13 @@
 		<script type="text/javascript">
 			let playerCount = 0;
 			let serverCount = 0;
+			let dewConnected = false;
+			
+			$.getScript( "dew://lib/dew.js" )
+				.done(function() {
+				dewConnected = true;
+			});
+			
 			$(document).ready(function() {
 				// addServer("127.0.0.1:11775", "Test server", "emoose", "Guardian", "guardian", "Team Slayer", "1", "16");
 			});
@@ -65,12 +72,14 @@
 			function promptPassword(serverIP) {
 				var password = prompt("The server at " + serverIP + " is passworded, enter the password to join", "");
 				if (password != null) {
-					window.open("dorito:" + serverIP + "/" + password);
+					//window.open("dorito:" + serverIP + "/" + password);
+					dew.command('connect ' + serverIP + ' ' + password);
 				}
 			}
 			
 			function addServer(ip, isPassworded, name, host, map, mapfile, gamemode, status, numplayers, maxplayers) {
-				let servName = "<td><a href=\"dorito:" + ip + "\">" + name + " (" + host + ")</a></td>";
+				//let servName = "<td><a href=\"dorito:" + ip + "\">" + name + " (" + host + ")</a></td>";
+				let servName = "<td><a onclick=\"dew.command(" + ip + )\"">" + name + " (" + host + ")</a></td>";
 				if (isPassworded)
 					servName = "<td><a href=\"#\" onclick=\"promptPassword('" + ip + "');\">[PASSWORDED] " + name + " (" + host + ")</a></td>";
 				let servMap = "<td>" + map + " (" + mapfile + ")</td>";
