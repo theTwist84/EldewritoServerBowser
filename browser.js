@@ -6,7 +6,7 @@ $(document).ready(function()
 $("#refresh").click(function()
 {
     $("#serverlist").find("tr:gt(0)").remove();
-    $.getJSON( "http://eldewrito.red-m.net/list", function( data ) {
+    $.getJSON( "http://master.zgaf.io/list", function( data ) {
         if(data.result.code != 0)
         {
             alert("Error received from master: " + data.result.msg);
